@@ -70,17 +70,22 @@ def transform_items(items: list) -> pd.DataFrame:
 
 
 def save_silver(df : pd.DataFrame):
+    if df.empty:
+        print("⚠️ Nada novo para salvar na Silver")
+        return
+
     if SILVER_FILE.exists():
-        df.to_csv(SILVER_FILE, mode = "a", index = False, header = False)
+        df_existing = pd.read_csv(SILVER_FILE, parse_dates = ["played_at"])
+        df_final = pd.concat([df_existing, df], ignore_index = True)
+        df_final = df_final.drop_duplicates(subset = ["track_id","played_at"])
+
+        #df.to_csv(SILVER_FILE, mode = "a", index = False, header = False)
     else:
-        df.to_csv(SILVER_FILE, index = False)
+        df_final = df
+        #df.to_csv(SILVER_FILE, index = False)
 
-
-'''def run_silver():
-    items = read_raw_files()
-    df = transform_items(items)
-    save_silver(df)
-'''
+    df_final.to_csv(SILVER_FILE, index = False)
+    print(f"✅ Silver atualizada: {len(df_final)} registros")
 
 def run_silver():
     items = read_raw_files()
@@ -88,5 +93,6 @@ def run_silver():
     df = transform_items(items)
     save_silver(df)
 
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     run_silver()
+'''

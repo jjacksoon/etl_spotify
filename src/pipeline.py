@@ -15,16 +15,6 @@ def load_access_token() -> str:
         return json.load(f)["access_token"]
 
 
-'''def run_recently_played():
-    token = load_access_token()
-
-    data = get_recently_played(token, limit=10)
-
-    file_path = save_recently_played_raw(data)
-
-    print(f"✅ RAW salvo com sucesso em: {file_path}")'''
-
-
 def run_pipeline():
     print("🚀 Pipeline iniciado")
 

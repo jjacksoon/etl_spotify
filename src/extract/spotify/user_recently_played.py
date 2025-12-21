@@ -1,7 +1,7 @@
 import requests
 
 def get_recently_played(access_token: str, limit: int = 20) -> dict:
-    headers = {
+    headers = {                                                         #metadados da requisição
         "Authorization": f"Bearer {access_token}"
     }
 
