@@ -17,6 +17,11 @@ conn = psycopg2.connect(
 #Criar um cursor para executar comandos SQL - percorrer os resultados de uma consulta linha por linha
 cursor = conn.cursor()
 
+#Criação do Schema
+create_schema_gold = """
+    CREATE SCHEMA IF NOT EXISTS gold
+"""
+
 #Criação das tabelas dimensão
 
 # =========================
@@ -24,7 +29,7 @@ cursor = conn.cursor()
 # =========================
 
 create_dim_artist = ("""
-    CREATE TABLE IF NOT EXISTS dim_artist(
+    CREATE TABLE IF NOT EXISTS gold.dim_artist(
     artist_id VARCHAR PRIMARY KEY,
     artist_name VARCHAR
     );
@@ -35,11 +40,11 @@ create_dim_artist = ("""
 # =========================
 
 create_dim_album = ("""
-    CREATE TABLE IF NOT EXISTS dim_album(
+    CREATE TABLE IF NOT EXISTS gold.dim_album(
     album_id VARCHAR PRIMARY KEY,
     album_name VARCHAR,
     album_release_date DATE,
-    artist_id VARCHAR REFERENCES dim_artist(artist_id)
+    artist_id VARCHAR REFERENCES gold.dim_artist(artist_id)
     );
 """)
 
@@ -48,7 +53,7 @@ create_dim_album = ("""
 # =========================
 
 create_dim_track = ("""
-    CREATE TABLE IF NOT EXISTS dim_track(
+    CREATE TABLE IF NOT EXISTS gold.dim_track(
     track_id VARCHAR PRIMARY KEY,
     track_name VARCHAR,
     explicit BOOLEAN,
@@ -65,10 +70,10 @@ create_dim_track = ("""
 # =========================
 
 create_fact_recently_played = ("""
-    CREATE TABLE IF NOT EXISTS fact_recently_played(
+    CREATE TABLE IF NOT EXISTS gold.fact_recently_played(
     played_at TIMESTAMP,
-    track_id VARCHAR REFERENCES dim_track(track_id),
-    album_id VARCHAR REFERENCES dim_album(album_id),
+    track_id VARCHAR REFERENCES gold.dim_track(track_id),
+    album_id VARCHAR REFERENCES gold.dim_album(album_id),
     duration_ms INT,
     PRIMARY KEY (played_at, track_id)
     );
@@ -76,6 +81,7 @@ create_fact_recently_played = ("""
 
 
 #Executar comandos SQL
+cursor.execute(create_schema_gold)
 cursor.execute(create_dim_artist)
 cursor.execute(create_dim_album)
 cursor.execute(create_dim_track)

@@ -29,7 +29,7 @@ def load_dim_artist():
 
     #inserindo informação na tabela do banco - Se o artista já existir, ignora
     sql = """
-        INSERT INTO dim_artist (artist_id, artist_name)
+        INSERT INTO gold.dim_artist (artist_id, artist_name)
         VALUES (%s,%s)
         ON CONFLICT (artist_id) DO NOTHING
     """
@@ -60,7 +60,7 @@ def load_dim_album():
     df = df.where(pd.notnull(df), None)
 
     sql = """
-        INSERT INTO dim_album (album_id, album_name, album_release_date, artist_id)
+        INSERT INTO gold.dim_album (album_id, album_name, album_release_date, artist_id)
         VALUES (%s, %s, %s, %s)
         ON CONFLICT (album_id) DO NOTHING;
     """
@@ -84,7 +84,7 @@ def load_dim_track():
 
     #Inserindo informações na tabela do banco - se track já existir, ignora
     sql = """
-        INSERT INTO dim_track(track_id, track_name, explicit, popularity)
+        INSERT INTO gold.dim_track(track_id, track_name, explicit, popularity)
         VALUES(%s,%s,%s,%s)
         ON CONFLICT (track_id) DO NOTHING
     """
@@ -109,7 +109,7 @@ def load_fact_recently_played():
 
     #Inserindo informações na tabela do banco - se faixa ouvida já existir, ingnora
     sql = """
-        INSERT INTO fact_recently_played(played_at, track_id, album_id, duration_ms)
+        INSERT INTO gold.fact_recently_played(played_at, track_id, album_id, duration_ms)
         VALUES(%s,%s,%s,%s)
         ON CONFLICT (played_at, track_id) DO NOTHING
     """
