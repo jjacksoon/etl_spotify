@@ -28,3 +28,10 @@ build/
 
 # Cache pytest
 .pytest_cache/
+
+# Cache e dados camadas
+__pycache__/
+*.pyc
+data/raw/
+data/silver/
+data/gold/
